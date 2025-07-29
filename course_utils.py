@@ -2,6 +2,14 @@ import requests
 import pandas as pd
 from io import StringIO
 import urllib3
+from bs4 import BeautifulSoup
+import os
+import time
+import json
+
+# --- 快取設定 ---
+CACHE_FILE = "course_data.json"
+CACHE_EXPIRATION_SECONDS = 4 * 3600  # 4 小時
 
 # 關閉 SSL 警告
 urllib3.disable_warnings()
@@ -27,17 +35,34 @@ def sort_key(code):
     return d * 100 + idx
 
 def fetch_course_map(url):
+    """
+    從指定的 URL 抓取課程資料並解析。
+    這個版本整合了兩種方式來獲取班級/科系標籤，使其更具彈性。
+    """
     resp = requests.get(url, headers={"User-Agent":"Mozilla/5.0"}, verify=False)
     resp.encoding = "utf-8"
     html = resp.text
+    soup = BeautifulSoup(html, "html.parser")
+    
+    label = None
+    # 優先嘗試從 <h2> 標籤解析 label
+    header = soup.find("h2")
+    if header:
+        label = header.get_text().split("--")[-1].strip()
+
     try:
         df_raw = pd.read_html(StringIO(html), header=[0,1])[0]
     except ValueError:
-        return None, {}
-    label = df_raw.columns.get_level_values(0)[0].strip()
+        return label or "未知", {}
+
+    # 如果從 <h2> 解析失敗，則從 DataFrame 的 MultiIndex 回退
+    if not label:
+        label = df_raw.columns.get_level_values(0)[0].strip()
+
     df = df_raw.copy()
     df.columns = df_raw.columns.get_level_values(1)
     df = df[df['課號'].notna() & (df['課號']!='小計')].reset_index(drop=True)
+    
     course_map = {}
     for _, row in df.iterrows():
         name = row['課程名稱']
@@ -76,6 +101,28 @@ def build_dept_info(class_urls, priority_dept=None):
             print(f"正在讀取：{class_label}（{url}）")
             _, cmap = fetch_course_map(url)
             dept_info.append((class_label, cmap))
+    return dept_info
+
+def get_or_build_dept_info(class_urls, priority_dept=None):
+    """
+    處理快取的核心函式。
+    如果快取存在且未過期，從快取讀取；否則，重新建立並儲存快取。
+    """
+    # 檢查快取檔案是否存在且在有效期限內
+    if os.path.exists(CACHE_FILE):
+        file_mod_time = os.path.getmtime(CACHE_FILE)
+        if (time.time() - file_mod_time) < CACHE_EXPIRATION_SECONDS:
+            print("從快取檔案讀取課程資料...")
+            with open(CACHE_FILE, 'r', encoding='utf-8') as f:
+                return json.load(f)
+
+    # 如果快取不存在或已過期，則重新爬取
+    print("快取不存在或已過期，正在重新抓取課程資料...")
+    dept_info = build_dept_info(class_urls, priority_dept)
+    with open(CACHE_FILE, 'w', encoding='utf-8') as f:
+        json.dump(dept_info, f, ensure_ascii=False, indent=4)
+    print(f"課程資料已儲存至快取檔案: {CACHE_FILE}")
+    
     return dept_info
 
 def course_filter(dept_name, course_name, course_info):

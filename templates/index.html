@@ -1,63 +1,155 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
-  <meta charset="UTF-8">
-  <title>課表排程器</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
-  <style>
-    * { box-sizing: border-box; }
-    .timetable {
-      display: grid;
-      grid-template-columns: 50px repeat(5, 1fr);
-      grid-template-rows: 40px repeat(9, 60px);
-      gap: 1px;
-    }
-    .timetable > div {
-      background: #333;
-      color: #fff;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      padding: 4px;
-      font-size: 0.9rem;
-    }
-    .head, .time { background: #444; font-weight: bold; }
-    .course-esg   { background: #2e7d32 !important; }
-    .course-work  { background: #388e3c !important; }
-    .course-pe    { background: #f9a825 !important; }
-    .course-ai    { background: #0288d1 !important; }
-    .course-law   { background: #d84315 !important; }
-    .course-eng   { background: #6a1b9a !important; }
-    .course-ch    { background: #1565c0 !important; }
-    .course-def   { background: #ff8f00 !important; }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>智慧排課小幫手</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --course-bg-1: #e0f7fa; /* light cyan */
+            --course-bg-2: #c8e6c9; /* light green */
+            --course-bg-3: #fff9c4; /* light yellow */
+            --course-bg-4: #f8bbd0; /* light pink */
+            --course-bg-5: #d1c4e9; /* light purple */
+            --course-bg-6: #ffccbc; /* light orange */
+            --course-bg-7: #b2dfdb; /* light teal */
+            --course-bg-8: #f5f5f5; /* light grey */
+        }
+        body {
+            background-color: #f8f9fa;
+        }
+        .timetable-container {
+            padding: 2rem;
+        }
+        .control-panel {
+            padding: 2rem;
+            height: 100vh;
+            position: sticky;
+            top: 0;
+        }
+        .timetable {
+            table-layout: fixed;
+            border-radius: 0.5rem;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .timetable th, .timetable td {
+            text-align: center;
+            vertical-align: middle;
+            height: 5rem;
+            width: 12%;
+        }
+        .timetable th {
+            background-color: #343a40;
+            color: white;
+        }
+        .timetable .time-header {
+             background-color: #6c757d;
+        }
+        .timetable td.time-cell {
+            font-weight: bold;
+            background-color: #f1f3f5;
+        }
+        .course-block {
+            padding: 0.5rem;
+            border-radius: 0.25rem;
+            font-size: 0.85rem;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            line-height: 1.2;
+            color: #333;
+            font-weight: 500;
+        }
+        /* Color palette for courses */
+        .course-def { background-color: var(--course-bg-1); }
+        .course-pe  { background-color: var(--course-bg-2); }
+        .course-eng { background-color: var(--course-bg-3); }
+        .course-ai  { background-color: var(--course-bg-4); }
+        .course-esg { background-color: var(--course-bg-5); }
+        .course-work{ background-color: var(--course-bg-6); }
+        .course-ch  { background-color: var(--course-bg-7); }
+        .course-law { background-color: var(--course-bg-8); }
+    </style>
 </head>
-<body class="p-4 bg-dark text-white">
-  <div class="container">
-    <h1 class="mb-4">課表排程器</h1>
-    <form method="POST">
-      <div class="form-group">
-        <label>優先科系：</label>
-        <input type="text" name="priority_dept" class="form-control" value="資工系">
-      </div>
-      <div class="form-group">
-        <label>選擇課程：</label><br>
-        {% for course in selected %}
-          <div class="form-check form-check-inline">
-            <input class="form-check-input" type="checkbox" name="selected" value="{{ course }}" checked>
-            <label class="form-check-label text-white">{{ course }}</label>
-          </div>
-        {% endfor %}
-      </div>
-      <button type="submit" class="btn btn-primary">送出排課</button>
-    </form>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Control Panel -->
+            <div class="col-md-3 control-panel bg-white shadow-sm">
+                <h3 class="mb-4">排課設定</h3>
+                <form method="POST">
+                    <div class="mb-3">
+                        <label for="priority_dept" class="form-label">優先科系</label>
+                        <input type="text" class="form-control" id="priority_dept" name="priority_dept" value="{{ priority_dept }}">
+                    </div>
+                    <div class="mb-3">
+                        <label for="class_urls_file" class="form-label">課程資料來源</label>
+                        <select class="form-select" id="class_urls_file" name="class_urls_file">
+                            <option value="class_urls_1.json" {% if class_urls_file == 'class_urls_1.json' %}selected{% endif %}>學期一</option>
+                            <option value="class_urls_2.json" {% if class_urls_file == 'class_urls_2.json' %}selected{% endif %}>學期二</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="selected_courses" class="form-label">我的課程清單 (一行一門)</label>
+                        <textarea class="form-control" id="selected_courses" name="selected_courses" rows="10">{{ selected_courses }}</textarea>
+                    </div>
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary">產生新課表</button>
+                    </div>
+                </form>
+            </div>
 
-    {% if timetable %}
-      <hr class="bg-secondary">
-      <h2>📚 我的課表（彩色格子版）</h2>
-      {{ timetable | safe }}
-    {% endif %}
-  </div>
+            <!-- Timetable -->
+            <div class="col-md-9 timetable-container">
+                <h2 class="text-center mb-4">我的課表</h2>
+                {% if schedule is not none %}
+                    <table class="table table-bordered timetable">
+                        <thead>
+                            <tr>
+                                <th class="time-header">時間</th>
+                                {% for day in schedule.columns %}
+                                    <th>{{ day }}</th>
+                                {% endfor %}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for period, row in schedule.iterrows() %}
+                            <tr>
+                                <td class="time-cell">{{ period }}</td>
+                                {% for course in row %}
+                                    <td>
+                                        {% if course %}
+                                            {% set cls = '' %}
+                                            {% if '體育' in course %}{% set cls = 'course-pe' %}
+                                            {% elif '英文' in course %}{% set cls = 'course-eng' %}
+                                            {% elif 'AI' in course or '智慧' in course %}{% set cls = 'course-ai' %}
+                                            {% elif 'ESG' in course %}{% set cls = 'course-esg' %}
+                                            {% elif '工作' in course %}{% set cls = 'course-work' %}
+                                            {% elif '國語' in course %}{% set cls = 'course-ch' %}
+                                            {% elif '法' in course %}{% set cls = 'course-law' %}
+                                            {% else %}{% set cls = 'course-def' %}
+                                            {% endif %}
+                                            <div class="course-block {{ cls }}">{{ course }}</div>
+                                        {% endif %}
+                                    </td>
+                                {% endfor %}
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% else %}
+                    <p class="text-center">請在左側設定並產生課表。</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap 5 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

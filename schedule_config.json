@@ -1,0 +1,16 @@
+{
+    "priority_dept": "資工系",
+    "selected_courses": [
+        "離散數學",
+        "資料結構",
+        "數位邏輯設計",
+        "計算機概論",
+        "物件導向程式設計",
+        "計算機網路",
+        "專業英文",
+        "Android應用程式開發",
+        "網頁程式設計",
+        "體育"
+    ],
+    "class_urls_file": "class_urls_1.json"
+}
