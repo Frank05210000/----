@@ -1,0 +1,50 @@
+{
+    "資工系": {
+      "資工四": "https://aps.ntut.edu.tw/course/tw/Subj.jsp?format=-4&year=113&sem=2&code=2676",
+      "資工三": "https://aps.ntut.edu.tw/course/tw/Subj.jsp?format=-4&year=113&sem=2&code=2798",
+      "資工二": "https://aps.ntut.edu.tw/course/tw/Subj.jsp?format=-4&year=113&sem=2&code=2915",
+      "資工一": "https://aps.ntut.edu.tw/course/tw/Subj.jsp?format=-4&year=113&sem=2&code=3032"
+    },
+    "電機系": {
+      "電機四甲": "https://aps.ntut.edu.tw/course/tw/Subj.jsp?format=-4&year=113&sem=2&code=2655",
+      "電機四乙": "https://aps.ntut.edu.tw/course/tw/Subj.jsp?format=-4&year=113&sem=2&code=2656",
+      "電機四丙": "https://aps.ntut.edu.tw/course/tw/Subj.jsp?format=-4&year=113&sem=2&code=2657",
+      "電機三甲": "https://aps.ntut.edu.tw/course/tw/Subj.jsp?format=-4&year=113&sem=2&code=2777",
+      "電機三乙": "https://aps.ntut.edu.tw/course/tw/Subj.jsp?format=-4&year=113&sem=2&code=2778",
+      "電機三丙": "https://aps.ntut.edu.tw/course/tw/Subj.jsp?format=-4&year=113&sem=2&code=2779",
+      "電機二甲": "https://aps.ntut.edu.tw/course/tw/Subj.jsp?format=-4&year=113&sem=2&code=2894",
+      "電機二乙": "https://aps.ntut.edu.tw/course/tw/Subj.jsp?format=-4&year=113&sem=2&code=2895",
+      "電機二丙": "https://aps.ntut.edu.tw/course/tw/Subj.jsp?format=-4&year=113&sem=2&code=2896",
+      "電機一甲": "https://aps.ntut.edu.tw/course/tw/Subj.jsp?format=-4&year=113&sem=2&code=3011",
+      "電機一乙": "https://aps.ntut.edu.tw/course/tw/Subj.jsp?format=-4&year=113&sem=2&code=3012",
+      "電機一丙": "https://aps.ntut.edu.tw/course/tw/Subj.jsp?format=-4&year=113&sem=2&code=3013"
+    },
+    "電子系": {
+      "電子四甲": "https://aps.ntut.edu.tw/course/tw/Subj.jsp?format=-4&year=113&sem=2&code=2666",
+      "電子四乙": "https://aps.ntut.edu.tw/course/tw/Subj.jsp?format=-4&year=113&sem=2&code=2667",
+      "電子三甲": "https://aps.ntut.edu.tw/course/tw/Subj.jsp?format=-4&year=113&sem=2&code=2788",
+      "電子三乙": "https://aps.ntut.edu.tw/course/tw/Subj.jsp?format=-4&year=113&sem=2&code=2789",
+      "電子二甲": "https://aps.ntut.edu.tw/course/tw/Subj.jsp?format=-4&year=113&sem=2&code=2905",
+      "電子二乙": "https://aps.ntut.edu.tw/course/tw/Subj.jsp?format=-4&year=113&sem=2&code=2906",
+      "電子一甲": "https://aps.ntut.edu.tw/course/tw/Subj.jsp?format=-4&year=113&sem=2&code=3022",
+      "電子一乙": "https://aps.ntut.edu.tw/course/tw/Subj.jsp?format=-4&year=113&sem=2&code=3023"
+    },
+    "光電系": {
+      "光電四": "https://aps.ntut.edu.tw/course/tw/Subj.jsp?format=-4&year=113&sem=2&code=2677",
+      "光電三": "https://aps.ntut.edu.tw/course/tw/Subj.jsp?format=-4&year=113&sem=2&code=2799",
+      "光電二": "https://aps.ntut.edu.tw/course/tw/Subj.jsp?format=-4&year=113&sem=2&code=2916",
+      "光電一": "https://aps.ntut.edu.tw/course/tw/Subj.jsp?format=-4&year=113&sem=2&code=3033"
+    },
+    "電資學士班": {
+      "電資二": "https://aps.ntut.edu.tw/course/tw/Subj.jsp?format=-4&year=113&sem=2&code=2918",
+      "電資一": "https://aps.ntut.edu.tw/course/tw/Subj.jsp?format=-4&year=113&sem=2&code=3035"
+    },
+    "電資學院": {
+      "AI雙聯專班": "https://aps.ntut.edu.tw/course/tw/Subj.jsp?format=-4&year=113&sem=2&code=3103"
+    },
+    "創新學院": {
+      "創新AI學位學程": "https://aps.ntut.edu.tw/course/tw/Subj.jsp?format=-4&year=113&sem=2&code=3077",
+      "創新資安學位學程": "https://aps.ntut.edu.tw/course/tw/Subj.jsp?format=-4&year=113&sem=2&code=3078",
+      "半導體學位學程": "https://aps.ntut.edu.tw/course/tw/Subj.jsp?format=-4&year=113&sem=2&code=3079"
+    }
+  }
